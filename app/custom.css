@@ -1,0 +1,19 @@
+.item {
+margin: 25px 0 20px 0;
+}
+
+.title {
+font-size: x-large;
+margin-bottom: 20px;
+}
+
+.description {
+font-size: medium;
+}
+
+.pubDate {
+    font-size: smaller;
+   text-align: right;
+}
+
+ 

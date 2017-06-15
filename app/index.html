@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Newssite</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <link rel="stylesheet" href="custom.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="lib/jquery.min.js"></script>
+    <script src="feedReader.js"></script>
+</head>
+
+<body>
+    <div>
+        <div class="jumbotron" style="margin:20px;padding:20px">
+            <h2>Newssite</h2>
+            <span id="loadingIndicator"></span><input type="button" class="btn pull-right" value="reload" onclick="addFeedsToSite('ulContainer');"
+            />
+            <ul id="ulContainer" class="list-group" style="padding-top:30px">
+
+            </ul>
+        </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        addFeedsToSite("ulContainer");
+
+        //check if service worker is part of navigator
+        // and therefore implmented by the current browser
+        if ('serviceWorker' in navigator) {
+            //the service worker js file must always be on top level
+            //to use service worker the site must run under https (expect localhost)
+            navigator.serviceWorker.register('sw.js').then(function (reg) {
+                console.log('Registration succeeded', reg);
+            }).catch(function (error) {
+                console.log('Registration failed with ', error);
+            });
+        };
+    });
+
+</script>
+
+</html>
