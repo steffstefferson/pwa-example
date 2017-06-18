@@ -17,19 +17,23 @@ self.addEventListener('install', function (event) {
   );
 });
 
-self.addEventListener('activate', function (e) {
+self.addEventListener('activate', function (event) {
   console.log('ServiceWorker: Activate');
-  e.waitUntil(
-    caches.keys().then(function (keyList) {
+
+  event.waitUntil(deleteOldCacheVersions().then(function () {
+    self.clients.claim();
+  }));
+
+  function deleteOldCacheVersions() {
+    return caches.keys().then(function (keyList) {
       return Promise.all(keyList.map(function (key) {
         if (key !== staticCacheName) {
           console.log('[ServiceWorker] Removing old cache', key);
           return caches.delete(key);
         }
       }));
-    })
-  );
-  return self.clients.claim();
+    });
+  }
 });
 
 self.addEventListener('fetch', function (event) {

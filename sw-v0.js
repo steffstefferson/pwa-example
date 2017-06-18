@@ -17,9 +17,10 @@ self.addEventListener('install', function (event) {
   );
 });
 
-self.addEventListener('activate', function (e) {
+self.addEventListener('activate', function (event) {
   console.log('ServiceWorker: Activate');
-  return self.clients.claim();
+  //activate active worker asap
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('fetch', function (event) {

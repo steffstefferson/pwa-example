@@ -30,7 +30,7 @@
         //check if service worker is part of navigator
         // and therefore implmented by the current browser
         if ('serviceWorker' in navigator) {
-            //the service worker js file must always be on top level
+            //the service worker js file must always be on top level of the app
             //to use service worker the site must run under https (expect localhost)
             navigator.serviceWorker.register('sw.js').then(function (reg) {
                 console.log('Registration succeeded', reg);

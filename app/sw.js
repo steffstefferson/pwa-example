@@ -17,19 +17,23 @@ self.addEventListener('install', function (event) {
   );
 });
 
-self.addEventListener('activate', function (e) {
+self.addEventListener('activate', function (event) {
   console.log('ServiceWorker: Activate');
-  e.waitUntil(
-    caches.keys().then(function (keyList) {
+
+  event.waitUntil(deleteOldCacheVersions().then(function () {
+    self.clients.claim();
+  }));
+
+  function deleteOldCacheVersions() {
+    return caches.keys().then(function (keyList) {
       return Promise.all(keyList.map(function (key) {
         if (key !== staticCacheName) {
           console.log('[ServiceWorker] Removing old cache', key);
           return caches.delete(key);
         }
       }));
-    })
-  );
-  return self.clients.claim();
+    });
+  }
 });
 
 
@@ -45,15 +49,15 @@ self.addEventListener('fetch', function (event) {
   //TODO: will probably not work in production :-)
   var isApplicationShell = event.request.url.indexOf("localhost") !== -1;
   if (isApplicationShell) {
-    // cache first strategy for all static files    
-    cacheFristStrategy(event);
+    // cache first strategy for all static files
+    cacheFirstStrategy(event);
   } else {
     networkFirstStrategy(event);
   }
 });
 
 
-function cacheFristStrategy(event) {
+function cacheFirstStrategy(event) {
   console.log("cache first strategy for my ressources.");
   event.respondWith(
     caches.match(event.request).then(function (responseCache) {
@@ -73,10 +77,10 @@ function networkFirstStrategy(event) {
   event.respondWith(
     caches.open(staticCacheName).then(function (cache) {
       console.log("try network...");
-      return fetchFromNetworkAndCache(cache).then(returnFromCache);
+      return fetchFromNetworkSaveToCache(cache).then(returnFromCache);
     }));
 
-  function fetchFromNetworkAndCache(cache) {
+  function fetchFromNetworkSaveToCache(cache) {
     const request20min = new Request(event.request.url + '?q=' + +new Date(), { mode: 'cors' });
     return fetch(request20min)
       .then(function (responseFresh) {
