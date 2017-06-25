@@ -25,8 +25,9 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
 
-  //handle browser-reload develop function
+  //handle live reload function (for develop purpose)
   if (event.request.url.indexOf('/browser-sync/') !== -1) {
+    //fetch(..) is the new XMLHttpRequest
     event.respondWith(fetch(event.request));
     return;
   }
