@@ -1,6 +1,13 @@
 # pwa-example
 example of a pwa newssite 
 
+## installation
+
+run the application with the npm commands "npm install" then "npm dev" (using lite-server) 
+
+or you can simply copy the folder "app" to your favorite webserver
+
+## service worker
 checkout the diffrent kind of service-workers
 
 sw-v0.js
