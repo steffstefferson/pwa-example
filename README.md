@@ -15,4 +15,7 @@ sw-v2.js
 (to use it copy the file content to sw.js)
 cache first strategy for app shell and network first strategy for the rssfeed
 
-Note: consider using tools like sw-precache, sw-toolbox or workbox when dealing with service workers.
+Copy the content of one of these files to app/sw.js to try out the diffrent kinds of service workers.
+
+
+Note: consider using tools like sw-precache, sw-toolbox or workbox when dealing with more complex service workers.
