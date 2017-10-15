@@ -86,8 +86,10 @@ function networkFirstStrategy(event) {
       .then(function (responseFresh) {
         if (responseFresh) {
           console.log("got response from network for " + event.request.url + ", cache and return it");
-          cache.put(event.request, responseFresh);
-          return responseFresh;
+          return cache.put(event.request, responseFresh).then(function(){
+            return responseFresh;
+          })
+          //return responseFresh;
         } else {
           console.log("no network connection, try to serve it from cache");
         }
