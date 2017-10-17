@@ -75,23 +75,24 @@ function cacheFirstStrategy(event) {
 function networkFirstStrategy(event) {
   console.log("network first strategy...");
   event.respondWith(
-    caches.open(staticCacheName).then(function (cache) {
-      console.log("try network...");
-      return fetchFromNetworkSaveToCache(cache).then(returnFromCache);
-    }));
+    fetchFromNetworkSaveToCache().then(returnFromCache)
+  );
 
   function fetchFromNetworkSaveToCache(cache) {
-    const request20min = new Request(event.request.url + '?q=' + +new Date(), { mode: 'cors' });
-    return fetch(request20min)
+    const requestNetwork = new Request(event.request.url + '?q=' + +new Date(), { mode: 'cors' });
+    console.log("try network...");
+    return fetch(requestNetwork)
       .then(function (responseFresh) {
         if (responseFresh) {
           console.log("got response from network for " + event.request.url + ", cache and return it");
-          return cache.put(event.request, responseFresh).then(function(){
-            return responseFresh;
-          })
+          return caches.open(staticCacheName).then(function (cache) {
+            return cache.put(event.request, responseFresh).then(function () {
+              return responseFresh;
+            })
+          });
           //return responseFresh;
         } else {
-          console.log("no network connection, try to serve it from cache");
+          console.log("no network connection, try to serve it from cache later");
         }
       }, function (err) {
         console.log('error fetch:', err);
